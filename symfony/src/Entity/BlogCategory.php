@@ -50,7 +50,6 @@ class BlogCategory
 
     public function toArray()
     {
-
         return [
             'id' => $this->getId(),
             'title' => $this->getTitle()

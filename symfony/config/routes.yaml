@@ -18,6 +18,11 @@ blog_detail:
   controller: App\Controller\MainController::blog_detail
   methods: GET
 
+contacts:
+  path: /contacts
+  controller: App\Controller\MainController::contacts
+  methods: GET
+
 login:
   path: /login
   controller: App\Controller\SecurityController::login

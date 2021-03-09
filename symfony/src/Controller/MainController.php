@@ -60,5 +60,18 @@ class MainController extends AbstractController
 		]);
 	}
 
+	/**
+	 * @Route("/blog/{category}/{id}")
+	 */
+
+	public function contacts(): Response
+	{
+		$info = 'Welcome to contacts page';
+
+		return $this->render('main/contacts.html.twig', [
+			'info' => $info,
+		]);
+	}
+
 
 }
