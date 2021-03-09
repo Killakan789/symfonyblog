@@ -1,0 +1,228 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Test REST API Doc",
+    "description": "This is a short documentation created for using REST queries of the project",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8003"
+    }
+  ],
+  "paths": {
+    "/customer/delete/4": {
+      "delete": {
+        "description": "Deletes a customer with a certain ID (enter identification number after slash)",
+        "responses": {
+          "204": {
+            "description": "Returning a customer deleted message"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:8003"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:8003"
+        }
+      ]
+    },
+    "/customer/update/2": {
+      "put": {
+        "description": "Updates a customer with a certain id (you should enter info of a customer that should be updated in a JSON format - \"{ \"key\":\"value\",\"key\":\"value\" }\" )",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"id\": 2,\n    \"firstName\": \"Everardo\",\n    \"lastName\": \"Murazik\",\n    \"email\": \"candido53@gmail.com\",\n    \"phoneNumber\": \"404-305-7561 x9557\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "You will recieve updated info as a JSON Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/body"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"id\":2,\"firstName\":\"Everardo\",\"lastName\":\"Murazik\",\"email\":\"candido53@gmail.com\",\"phoneNumber\":\"404-305-7561 x9557\"}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:8003"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:8003"
+        }
+      ]
+    },
+    "/customer/add": {
+      "post": {
+        "description": "Adds a customer (You should sent a JSON in a body of a message in order to create new customer)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/body_1"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"firstName\":\"John\",\n    \"lastName\":\"Doe\",\n    \"email\":\"john.doe@mail.com\",\n    \"phoneNumber\":\"0999999999\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Returns that customer is created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_201"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"status\":\"Customer created!\"}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:8003"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:8003"
+        }
+      ]
+    },
+    "/customer/": {
+      "get": {
+        "description": "Showing all customers",
+        "responses": {
+          "200": {
+            "description": "You will recieve all stored customers as a JSON response"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:8003"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:8003"
+        }
+      ]
+    },
+    "/customer/2": {
+      "get": {
+        "description": "Showing certain customer",
+        "responses": {
+          "200": {
+            "description": "Returns certain customer's info as JSON response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/body"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"id\":2,\"firstName\":\"Everardo\",\"lastName\":\"Murazik\",\"email\":\"candido53@gmail.com\",\"phoneNumber\":\"404-305-7561 x9557\"}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:8003"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:8003"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "body_1": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_201": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

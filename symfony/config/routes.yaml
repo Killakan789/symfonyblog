@@ -1,0 +1,38 @@
+index:
+  path: /
+  controller: App\Controller\MainController::index
+  methods: GET
+
+blog:
+  path: /blog
+  controller: App\Controller\MainController::blog
+  methods: GET
+
+blog_category:
+  path: /blog/{category}
+  controller: App\Controller\MainController::blog_category
+  methods: GET
+
+blog_detail:
+  path: /blog/{category}/{title}
+  controller: App\Controller\MainController::blog_detail
+  methods: GET
+
+login:
+  path: /login
+  controller: App\Controller\SecurityController::login
+
+logout:
+  path: /logout
+  controller: App\Controller\SecurityController::logout
+  methods: GET|POST
+
+index_admin:
+  path: /admin
+  methods: GET
+  controller: App\Controller\AdminController::index
+
+admin_dashboard:
+  path: /admin/dashboard
+  methods: GET
+  controller: App\Controller\AdminController::admin_dashboard
