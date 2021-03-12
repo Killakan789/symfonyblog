@@ -24,9 +24,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/blog">Blog</a>
                 </li>
+                {% if app.user %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/contacts">Contacts</a>
+                    <a class="nav-link" href="/customers">Customers</a>
                 </li>
+                {% endif %}
                 {% if app.user %}
                     <li class="nav-item">
                         <a class="nav-link" href="/admin">Dashboard</a>

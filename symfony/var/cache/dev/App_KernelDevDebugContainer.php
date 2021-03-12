@@ -16,6 +16,6 @@ if (!\class_exists(App_KernelDevDebugContainer::class, false)) {
 
 return new \ContainerKubo6gp\App_KernelDevDebugContainer([
     'container.build_hash' => 'Kubo6gp',
-    'container.build_id' => '9a87a1ac',
-    'container.build_time' => 1615305453,
+    'container.build_id' => '1aca748c',
+    'container.build_time' => 1615548052,
 ], __DIR__.\DIRECTORY_SEPARATOR.'ContainerKubo6gp');

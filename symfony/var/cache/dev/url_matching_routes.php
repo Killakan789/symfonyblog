@@ -36,7 +36,12 @@ return [
         ],
         '/api/login' => [[['_route' => 'api_login', '_controller' => 'App\\Controller\\SecurityController::apiLogin'], null, null, null, false, false, null]],
         '/api/logout' => [[['_route' => 'api_logout', '_controller' => 'App\\Controller\\SecurityController::apiLogout'], null, null, null, false, false, null]],
-        '/admin/dashboard' => [[['_route' => 'admin_dashboard', '_controller' => 'App\\Controller\\AdminController::admin_dashboard'], null, ['GET' => 0], null, false, false, null]],
+        '/blog/{category.title}/{blog.title}' => [[['_route' => 'blog_detail', '_controller' => 'App\\Controller\\MainController::blog_detail'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/users' => [[['_route' => 'admin_users', '_controller' => 'App\\Controller\\AdminController::admin_users'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/user/create' => [[['_route' => 'admin_user_create', '_controller' => 'App\\Controller\\AdminController::admin_user_create'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/blog' => [[['_route' => 'admin_blog', '_controller' => 'App\\Controller\\AdminController::admin_blog'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/blog/create' => [[['_route' => 'admin_blog_create', '_controller' => 'App\\Controller\\AdminController::admin_blog_create'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/blog/categories/create' => [[['_route' => 'admin_blog_categories_create', '_controller' => 'App\\Controller\\AdminController::admin_blog_categories_create'], null, ['GET' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -55,13 +60,30 @@ return [
                         .'|(*:159)'
                     .')'
                 .')'
-                .'|/blog/([^/]++)(?'
-                    .'|(*:186)'
-                    .'|/([^/]++)(?'
-                        .'|(*:206)'
-                        .'|(*:214)'
+                .'|/blog/(?'
+                    .'|([^/]++)(*:186)'
+                    .'|articles/([^/]++)(*:211)'
+                    .'|([^/]++)(*:227)'
+                .')'
+                .'|/admin/(?'
+                    .'|user/(?'
+                        .'|([^/]++)(*:262)'
+                        .'|update/([^/]++)(*:285)'
+                        .'|delete/([^/]++)(*:308)'
                     .')'
-                    .'|(*:223)'
+                    .'|blog/(?'
+                        .'|([^/]++)(*:333)'
+                        .'|update/([^/]++)(*:356)'
+                        .'|delete/([^/]++)(*:379)'
+                        .'|categories(?'
+                            .'|(*:400)'
+                            .'|/(?'
+                                .'|([^/]++)(*:420)'
+                                .'|update/([^/]++)(*:443)'
+                                .'|delete/([^/]++)(*:466)'
+                            .')'
+                        .')'
+                    .')'
                 .')'
             .')/?$}sDu',
     ],
@@ -74,10 +96,19 @@ return [
         149 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
         159 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
         186 => [[['_route' => 'app_main_blog_category', '_controller' => 'App\\Controller\\MainController::blog_category'], ['category'], null, null, false, true, null]],
-        206 => [[['_route' => 'app_main_blog_detail', '_controller' => 'App\\Controller\\MainController::blog_detail'], ['category', 'id'], null, null, false, true, null]],
-        214 => [[['_route' => 'blog_detail', '_controller' => 'App\\Controller\\MainController::blog_detail'], ['category', 'title'], ['GET' => 0], null, false, true, null]],
-        223 => [
-            [['_route' => 'blog_category', '_controller' => 'App\\Controller\\MainController::blog_category'], ['category'], ['GET' => 0], null, false, true, null],
+        211 => [[['_route' => 'app_main_blog_detail', '_controller' => 'App\\Controller\\MainController::blog_detail'], ['title'], null, null, false, true, null]],
+        227 => [[['_route' => 'blog_category', '_controller' => 'App\\Controller\\MainController::blog_category'], ['category'], ['GET' => 0], null, false, true, null]],
+        262 => [[['_route' => 'admin_usrs_read', '_controller' => 'App\\Controller\\AdminController::admin_user_read'], ['id'], ['GET' => 0], null, false, true, null]],
+        285 => [[['_route' => 'admin_user_update', '_controller' => 'App\\Controller\\AdminController::admin_user_update'], ['id'], ['GET' => 0], null, false, true, null]],
+        308 => [[['_route' => 'admin_user_delete', '_controller' => 'App\\Controller\\AdminController::admin_user_delete'], ['id'], ['GET' => 0], null, false, true, null]],
+        333 => [[['_route' => 'admin_blog_read', '_controller' => 'App\\Controller\\AdminController::admin_blog_read'], ['id'], ['GET' => 0], null, false, true, null]],
+        356 => [[['_route' => 'admin_blog_update', '_controller' => 'App\\Controller\\AdminController::admin_blog_update'], ['id'], ['GET' => 0], null, false, true, null]],
+        379 => [[['_route' => 'admin_blog_delete', '_controller' => 'App\\Controller\\AdminController::admin_blog_delete'], ['id'], ['GET' => 0], null, false, true, null]],
+        400 => [[['_route' => 'admin_blog_categories', '_controller' => 'App\\Controller\\AdminController::admin_blog_categories'], [], ['GET' => 0], null, false, false, null]],
+        420 => [[['_route' => 'admin_blog_categories_read', '_controller' => 'App\\Controller\\AdminController::admin_blog_categories_read'], ['id'], ['GET' => 0], null, false, true, null]],
+        443 => [[['_route' => 'admin_blog_categories_update', '_controller' => 'App\\Controller\\AdminController::admin_blog_categories_update'], ['id'], ['GET' => 0], null, false, true, null]],
+        466 => [
+            [['_route' => 'admin_blog_categories_delete', '_controller' => 'App\\Controller\\AdminController::admin_blog_categories_delete'], ['id'], ['GET' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

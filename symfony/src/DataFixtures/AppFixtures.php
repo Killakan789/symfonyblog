@@ -6,6 +6,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use App\Entity\Customer;
+use App\Entity\BlogCategory;
+use App\Entity\Blog;
 
 
 class AppFixtures extends Fixture
@@ -15,7 +17,7 @@ class AppFixtures extends Fixture
         $faker = Factory::create();
 		// test blog categroies
         for ($i = 0; $i < 8; $i++) {
-            $customer = new Blog_category();
+            $customer = new BlogCategory();
             $customer->setTitle($faker->title);
             $manager->persist($customer);
         }
