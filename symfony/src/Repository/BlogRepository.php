@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Blog;
+use App\Entity\BlogCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -15,43 +17,50 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class BlogRepository extends ServiceEntityRepository
 {
-	private $manager;
+	public $entityManager;
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $em)
+    {
+	    $this->entityManager = $em;
+        parent::__construct($registry, Blog::class);
+    }
 
-	public function __construct
-	(
-		ManagerRegistry $registry,
-		EntityManagerInterface $manager
-	)
+    // /**
+    //  * @return Blog[] Returns an array of Blog objects
+    //  */
+
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.title = :val')
+            ->setParameter('val', $value)
+            ->orderBy('b.category_id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+
+	public function findByCategoryTitle($value)
 	{
-		parent::__construct($registry, Blog::class);
-		$this->manager = $manager;
+
+		$rsm = new ResultSetMapping();
+		$rsm->addEntityResult(Blog::class, 'b');
+		$rsm->addFieldResult('b','id', 'id');
+		$rsm->addFieldResult('b','title', 'title');
+		$rsm->addFieldResult('b','description', 'description');
+		$rsm->addFieldResult('b','short_description', 'short_description');
+		$rsm->addFieldResult('b','category_id', 'category_id');
+		$query = $this->entityManager->createNativeQuery("
+			SELECT b.id as id,
+			       b.title as title,
+			       b.description as description,
+			       b.short_description as short_description,
+			       b.category_id as category_id
+			FROM blog as b  
+			WHERE b.title =? ", $rsm);
+		$query->setParameter(1, $value);
+		return $query->getResult();
 	}
 
-	public function saveBlog($title, $description, $short_description, $category_id)
-	{
-		$newBlog = new Blog();
-
-		$newBlog
-			->setTitle($title)
-			->setShortDescription($short_description)
-			->setDescription($description)
-			->setCategoryId($category_id);
-
-		$this->manager->persist($newBlog);
-		$this->manager->flush();
-		return $newBlog;
-	}
-
-	public function updateBlog(Blog $blog): Blog
-	{
-		$this->manager->persist($blog);
-		$this->manager->flush();
-		return $blog;
-	}
-
-	public function removeBlog(Blog $blog)
-	{
-		$this->manager->remove($blog);
-		$this->manager->flush();
-	}
 }

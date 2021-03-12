@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 
+use App\Entity\Blog;
+use App\Entity\BlogCategory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,16 +23,28 @@ class AdminController extends AbstractController
     public function index()
     {
         // usually you'll want to make sure the user is authenticated first
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_MANAGER');
 
         // returns your User object, or null if the user is not authenticated
         // use inline documentation to tell your editor your exact User class
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
+		$articles = $this->getDoctrine()
+			->getRepository(Blog::class)
+			->findAll();
+	    $categories = $this->getDoctrine()
+		    ->getRepository(BlogCategory::class)
+		    ->findAll();
+	    $users = $this->getDoctrine()
+		    ->getRepository(User::class)
+		    ->findAll();
 
-        // Call whatever methods you've added to your User class
-        // For example, if you added a getFirstName() method, you can use that.
-        return new Response('Well hi there '.$user->getUsername());
+	    return $this->render('admin/index.html.twig', [
+		    'user' => $user,
+		    'articles' => $articles,
+		    'categories' => $categories,
+		    'users' => $users,
+	    ]);
     }
 
 

@@ -1,3 +1,8 @@
 {% include 'main/header.html.twig' %}
-<h1>{{ info }}</h1>
+<div class="jumbotron">
+    {% for article in blog %}
+    <h1>{{ article.title }}</h1>
+    <p>{{ article.description }}</p>
+    {% endfor %}
+</div>
 {% include 'main/footer.html.twig' %}

@@ -2,11 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Blog;
 use App\Entity\BlogCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManagerInterface;
-
 /**
  * @method BlogCategory|null find($id, $lockMode = null, $lockVersion = null)
  * @method BlogCategory|null findOneBy(array $criteria, array $orderBy = null)
@@ -15,39 +16,53 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class BlogCategoryRepository extends ServiceEntityRepository
 {
-    private $manager;
+	public $entityManager;
 
-    public function __construct
-    (
-        ManagerRegistry $registry,
-        EntityManagerInterface $manager
-    )
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $em)
     {
+    	$this->entityManager = $em;
         parent::__construct($registry, BlogCategory::class);
-        $this->manager = $manager;
     }
 
-    public function saveBlogCategory($title)
+    // /**
+    //  * @return BlogCategory[] Returns an array of BlogCategory objects
+    //  */
+
+    public function findByExampleField($value)
     {
-        $newBlogCategory = new BlogCategory();
-
-        $newBlogCategory->setTitle($title);
-
-        $this->manager->persist($newBlogCategory);
-        $this->manager->flush();
-        return $newBlogCategory;
+        return $this->createQueryBuilder('bc')
+            ->andWhere('bc.title = :val')
+            ->setParameter('val', $value)
+            ->orderBy('bc.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
-    public function updateBlogCategory(BlogCategory $blogCategory): BlogCategory
+
+
+    public function findByCategoryTitle($value)
     {
-        $this->manager->persist($blogCategory);
-        $this->manager->flush();
-        return $blogCategory;
+
+	    $rsm = new ResultSetMapping();
+	    $rsm->addEntityResult(Blog::class, 'b');
+	    $rsm->addFieldResult('b','id', 'id');
+	    $rsm->addFieldResult('b','title', 'title');
+	    $rsm->addFieldResult('b','description', 'description');
+	    $rsm->addFieldResult('b','short_description', 'short_description');
+	    $rsm->addFieldResult('b','category_id', 'category_id');
+	    $query = $this->entityManager->createNativeQuery("
+			SELECT b.id as id,
+			       b.title as title,
+			       b.description as description,
+			       b.short_description as short_description,
+			       b.category_id as category_id
+			FROM blog as b 
+	        INNER JOIN blog_category as bc ON b.category_id=bc.id 
+			WHERE bc.title =? ", $rsm);
+	    $query->setParameter(1, $value);
+	    return $query->getResult();
     }
 
-    public function removeBlog(BlogCategory $blog)
-    {
-        $this->manager->remove($blog);
-        $this->manager->flush();
-    }
 }
