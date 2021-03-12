@@ -26,6 +26,7 @@ services:
       context : .
       dockerfile: Dockerfile-php
     environment:
+      
       APP_ENV: dev
       DATABASE_URL: mysql://testuser:localtesting@mysql:3306/restdb?serverVersion=5.7
     volumes:

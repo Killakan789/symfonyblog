@@ -47,7 +47,7 @@
         <parameter key="namespace">Symfony\Bundle\TwigBundle</parameter>
       </parameter>
       <parameter key="TwigExtraBundle" type="collection">
-        <parameter key="path">/var/www/symfony/vendor/twig/extra-bundle/src</parameter>
+        <parameter key="path">/var/www/symfony/vendor/twig/extra-bundle</parameter>
         <parameter key="namespace">Twig\Extra\TwigExtraBundle</parameter>
       </parameter>
       <parameter key="MonologBundle" type="collection">
@@ -1193,6 +1193,7 @@
     <service id="form.type.choice" class="Symfony\Component\Form\Extension\Core\Type\ChoiceType">
       <tag name="form.type"/>
       <argument type="service" id="form.choice_list_factory.cached"/>
+      <argument>null</argument>
     </service>
     <service id="form.type.file" class="Symfony\Component\Form\Extension\Core\Type\FileType" public="true">
       <tag name="form.type"/>
@@ -2099,13 +2100,22 @@
       <tag name="annotations.cached_reader"/>
       <argument type="service" id="annotations.reader"/>
       <argument type="service">
-        <service class="Doctrine\Common\Cache\ArrayCache"/>
+        <service class="Symfony\Component\Cache\DoctrineProvider">
+          <argument type="service">
+            <service class="Symfony\Component\Cache\Adapter\ArrayAdapter"/>
+          </argument>
+        </service>
       </argument>
       <argument>true</argument>
       <property name="cacheProviderBackup" type="service" id="annotations.cache"/>
     </service>
-    <service id="annotations.filesystem_cache" class="Doctrine\Common\Cache\FilesystemCache">
+    <service id="annotations.filesystem_cache_adapter" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
+      <argument></argument>
+      <argument>0</argument>
       <argument type="abstract">Cache-Directory</argument>
+    </service>
+    <service id="annotations.filesystem_cache" class="Symfony\Component\Cache\DoctrineProvider">
+      <argument type="service" id="annotations.filesystem_cache_adapter"/>
     </service>
     <service id="annotations.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\AnnotationsCacheWarmer">
       <tag name="kernel.cache_warmer"/>
@@ -2115,6 +2125,7 @@
       <argument>true</argument>
     </service>
     <service id="annotations.cache" class="Symfony\Component\Cache\DoctrineProvider">
+      <tag name="container.hot_path"/>
       <argument type="service">
         <service class="Symfony\Component\Cache\Adapter\PhpArrayAdapter">
           <argument>/var/www/symfony/var/cache/dev/annotations.php</argument>
@@ -2149,12 +2160,12 @@
       <argument type="collection">
         <argument type="service" id="serializer.denormalizer.unwrapping"/>
         <argument type="service" id="serializer.normalizer.problem"/>
+        <argument type="service" id="serializer.normalizer.uid"/>
         <argument type="service" id="serializer.normalizer.json_serializable"/>
         <argument type="service" id="serializer.normalizer.datetime"/>
         <argument type="service" id="serializer.normalizer.constraint_violation_list"/>
         <argument type="service" id="serializer.normalizer.datetimezone"/>
         <argument type="service" id="serializer.normalizer.dateinterval"/>
-        <argument type="service" id="serializer.normalizer.uid"/>
         <argument type="service" id="serializer.normalizer.form_error"/>
         <argument type="service" id="serializer.normalizer.data_uri"/>
         <argument type="service" id="serializer.denormalizer.array"/>
@@ -2200,7 +2211,7 @@
       <argument type="service" id="property_accessor"/>
     </service>
     <service id="serializer.normalizer.uid" class="Symfony\Component\Serializer\Normalizer\UidNormalizer">
-      <tag name="serializer.normalizer" priority="-915"/>
+      <tag name="serializer.normalizer" priority="-890"/>
     </service>
     <service id="serializer.normalizer.form_error" class="Symfony\Component\Serializer\Normalizer\FormErrorNormalizer">
       <tag name="serializer.normalizer" priority="-915"/>
@@ -2383,6 +2394,7 @@
     <service id="doctrine.query_sql_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\RunSqlDoctrineCommand">
       <tag name="console.command" command="doctrine:query:sql"/>
       <tag name="container.no_preload"/>
+      <argument type="service" id="Doctrine\Bundle\DoctrineBundle\Dbal\ManagerRegistryAwareConnectionProvider" on-invalid="null"/>
       <call method="setName">
         <argument>doctrine:query:sql</argument>
       </call>
@@ -2415,10 +2427,10 @@
       </argument>
     </service>
     <service id="doctrine.dbal.default_connection.event_manager" class="Symfony\Bridge\Doctrine\ContainerAwareEventManager">
-      <argument type="service" id=".service_locator.vhzPeUU"/>
-      <call method="addEventSubscriber">
-        <argument type="service" id="doctrine.orm.listeners.pdo_cache_adapter_doctrine_schema_subscriber"/>
-      </call>
+      <argument type="service" id=".service_locator.U8lX2Ss"/>
+      <argument type="collection">
+        <argument>doctrine.orm.listeners.pdo_cache_adapter_doctrine_schema_subscriber</argument>
+      </argument>
       <call method="addEventListener">
         <argument type="collection">
           <argument>loadClassMetadata</argument>
@@ -3172,6 +3184,12 @@
           <argument>suggestFunction</argument>
         </argument>
       </call>
+      <call method="registerUndefinedTokenParserCallback">
+        <argument type="collection">
+          <argument type="service" id="twig.missing_extension_suggestor"/>
+          <argument>suggestTag</argument>
+        </argument>
+      </call>
       <configurator service="twig.configurator.environment" method="configure"/>
     </service>
     <service id="twig.app_variable" class="Symfony\Bridge\Twig\AppVariable">
@@ -3485,9 +3503,6 @@
     </service>
     <service id="security.authentication_utils" class="Symfony\Component\Security\Http\Authentication\AuthenticationUtils">
       <argument type="service" id="request_stack"/>
-    </service>
-    <service id="security.event_dispatcher.event_bubbling_listener" class="Symfony\Bundle\SecurityBundle\EventListener\FirewallEventBubblingListener" abstract="true">
-      <argument type="service" id="debug.event_dispatcher"/>
     </service>
     <service id="security.role_hierarchy" class="Symfony\Component\Security\Core\Role\RoleHierarchy">
       <argument>%security.role_hierarchy.roles%</argument>
@@ -4672,10 +4687,11 @@
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="service" id="form.type.form"/>
       </argument>
     </service>
-    <service id=".service_locator.vhzPeUU" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.U8lX2Ss" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
+        <argument key="doctrine.orm.listeners.pdo_cache_adapter_doctrine_schema_subscriber" type="service" id="doctrine.orm.listeners.pdo_cache_adapter_doctrine_schema_subscriber"/>
       </argument>
     </service>
     <service id=".service_locator.xO.bJwf" class="Symfony\Component\DependencyInjection\ServiceLocator">

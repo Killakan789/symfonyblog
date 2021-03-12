@@ -23,16 +23,16 @@ class AppFixtures extends Fixture
 	    for ($i = 0; $i < 8; $i++) {
 		    $faker = Factory::create();
 		    $blog_category = new BlogCategory();
-		    $blog_category->setTitle($faker->RealText(20));
+		    $blog_category->setTitle('Title'.$i);
 		    $manager->persist($blog_category);
 	    }
 
 	    for ($i = 0; $i < 50; $i++) {
 		    $faker = Factory::create();
 		    $blog = new Blog();
-		    $blog->setTitle($faker->RealText(20));
-		    $blog->setDescription($faker->RealText(200));
-		    $blog->setShortDescription($faker->RealText(50));
+		    $blog->setTitle('Title'.$i);
+		    $blog->setDescription('Description'.$i);
+		    $blog->setShortDescription('Short description'.$i);
 		    $blog->setCategoryId(rand(1,7));
 		    $manager->persist($blog);
 	    }
