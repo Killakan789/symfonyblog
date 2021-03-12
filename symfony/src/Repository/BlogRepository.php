@@ -43,7 +43,6 @@ class BlogRepository extends ServiceEntityRepository
 
 	public function findByCategoryTitle($value)
 	{
-
 		$rsm = new ResultSetMapping();
 		$rsm->addEntityResult(Blog::class, 'b');
 		$rsm->addFieldResult('b','id', 'id');
