@@ -40,9 +40,14 @@ class __TwigTemplate_392e476cbd63e6fe48b6674f3a5bbc0261877a0e1614eb3d6c719b0fa80
         $__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02->enter($__internal_319393461309892924ff6e74d6d6e64287df64b63545b994e100d4ab223aed02_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "main/index.html.twig"));
 
         // line 1
+        $this->loadTemplate("main/header.html.twig", "main/index.html.twig", 1)->display($context);
+        // line 2
         echo "<h1>";
-        echo twig_escape_filter($this->env, (isset($context["info"]) || array_key_exists("info", $context) ? $context["info"] : (function () { throw new RuntimeError('Variable "info" does not exist.', 1, $this->source); })()), "html", null, true);
-        echo "</h1>";
+        echo twig_escape_filter($this->env, (isset($context["info"]) || array_key_exists("info", $context) ? $context["info"] : (function () { throw new RuntimeError('Variable "info" does not exist.', 2, $this->source); })()), "html", null, true);
+        echo "</h1>
+";
+        // line 3
+        $this->loadTemplate("main/footer.html.twig", "main/index.html.twig", 3)->display($context);
         
         $__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e->leave($__internal_085b0142806202599c7fe3b329164a92397d8978207a37e79d70b8c52599e33e_prof);
 
@@ -63,11 +68,13 @@ class __TwigTemplate_392e476cbd63e6fe48b6674f3a5bbc0261877a0e1614eb3d6c719b0fa80
 
     public function getDebugInfo()
     {
-        return array (  43 => 1,);
+        return array (  50 => 3,  45 => 2,  43 => 1,);
     }
 
     public function getSourceContext()
     {
-        return new Source("<h1>{{ info }}</h1>", "main/index.html.twig", "/var/www/symfony/templates/main/index.html.twig");
+        return new Source("{% include 'main/header.html.twig' %}
+<h1>{{ info }}</h1>
+{% include 'main/footer.html.twig' %}", "main/index.html.twig", "/var/www/symfony/templates/main/index.html.twig");
     }
 }

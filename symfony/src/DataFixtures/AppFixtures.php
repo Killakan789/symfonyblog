@@ -2,38 +2,42 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\BlogCategory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use App\Entity\Customer;
-use App\Entity\BlogCategory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Blog;
-
 
 class AppFixtures extends Fixture
 {
+     private $passwordEncoder;
+
+     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+     {
+         $this->passwordEncoder = $passwordEncoder;
+     }
+
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create();
-		// test blog categroies
-        for ($i = 0; $i < 8; $i++) {
-            $customer = new BlogCategory();
-            $customer->setTitle($faker->title);
-            $manager->persist($customer);
-        }
-        $manager->flush();
-
-
-	    $faker = Factory::create();
-		//test blog articles
-	    for ($i = 0; $i < 100; $i++) {
-		    $customer = new Blog();
-		    $customer->setTitle($faker->title);
-		    $customer->setDescription($faker->description);
-		    $customer->setShortDescription($faker->short_description);
-		    $customer->setCategoryId($faker->category_id);
-		    $manager->persist($customer);
+	    for ($i = 0; $i < 8; $i++) {
+		    $faker = Factory::create();
+		    $blog_category = new BlogCategory();
+		    $blog_category->setTitle('Title'.$i);
+		    $manager->persist($blog_category);
 	    }
+
+	    for ($i = 0; $i < 50; $i++) {
+		    $faker = Factory::create();
+		    $blog = new Blog();
+		    $blog->setTitle('Title'.$i);
+		    $blog->setDescription('Description'.$i);
+		    $blog->setShortDescription('Short description'.$i);
+		    $blog->setCategoryId(rand(1,7));
+		    $manager->persist($blog);
+	    }
+
+
 	    $manager->flush();
     }
 }

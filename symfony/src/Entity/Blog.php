@@ -2,15 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\CustomerRepository;
+use App\Repository\BlogRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bundle\MakerBundle\Validator;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=BlogRepository::class)
@@ -25,24 +18,24 @@ class Blog
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $short_description;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $description;
-
-	/**
-	 * @ORM\Column(type="integer", length=11)
-	 */
-	private $category_id;
+    private $category_id;
 
     public function getId(): ?int
     {
@@ -54,7 +47,7 @@ class Blog
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
@@ -66,7 +59,7 @@ class Blog
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -78,38 +71,34 @@ class Blog
         return $this->short_description;
     }
 
-    public function setShortDescription(string $short_decription): self
+    public function setShortDescription(?string $short_description): self
     {
-        $this->short_description = $short_decription;
+        $this->short_description = $short_description;
 
         return $this;
     }
 
-    public function getCategoryId(): ?string
+    public function getCategoryId(): ?int
     {
         return $this->category_id;
     }
 
-    public function setCategoryId(string $category_id): self
+    public function setCategoryId(?int $category_id): self
     {
         $this->category_id = $category_id;
 
         return $this;
     }
 
-    public function toArray()
-    {
+	public function toArray()
+	{
 
-        return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'short_description' => $this->getShortDescription(),
-            'description' => $this->getDescription(),
-            'category_id' => $this->getCategoryId()
-        ];
-    }
-
-
-
-
+		return [
+			'id' => $this->getId(),
+			'title' => $this->getTitle(),
+			'description' => $this->getDescription(),
+			'short_description' => $this->getShortDescription(),
+			'category_id' => $this->getCategoryId()
+		];
+	}
 }

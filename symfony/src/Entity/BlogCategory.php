@@ -2,15 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\CustomerRepository;
+use App\Repository\BlogCategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bundle\MakerBundle\Validator;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=BlogCategoryRepository::class)
@@ -25,11 +18,9 @@ class BlogCategory
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $title;
-
-
 
     public function getId(): ?int
     {
@@ -41,22 +32,19 @@ class BlogCategory
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
         return $this;
     }
 
-    public function toArray()
-    {
-        return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle()
-        ];
-    }
+	public function toArray()
+	{
 
-
-
-
+		return [
+			'id' => $this->getId(),
+			'title' => $this->getTitle()
+		];
+	}
 }
