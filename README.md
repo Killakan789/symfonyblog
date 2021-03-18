@@ -1,2 +1,2 @@
 # symfonyblog
-symfony crud application
+symfony crud application with docker and docker compose
