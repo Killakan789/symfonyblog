@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+  # PHP service
+  app:
+    build: ./docker/php/.
+    container_name: app-php_n
+    working_dir: /var/www/site
+    volumes:
+      - ./site:/var/www/site
+    networks:
+      - app-network
+
+  # Nginx service
+  nginx:
+    image: nginx:alpine
+    container_name: app-nginx_n
+    working_dir: /var/www/site
+    ports:
+      - 8001:80
+    volumes:
+      - ./site:/var/www/site
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  # Mysql service
+  database:
+    image: mysql:5.7.22
+    container_name: sf6mysql
+    restart: always
+    environment:
+      - MYSQL_DATABASE=symf6
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=symf6
+      - MYSQL_PASSWORD=symff6
+    volumes:
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - 3307:3306
+    expose:
+      - 3306
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
